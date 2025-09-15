@@ -136,117 +136,142 @@ It's reassuring to know that so many varied solutions for a posture analyser exi
 
 While I do like idea of the Zikto Walk, I don't think a wearable wrist device would be viable given the constraints of this project. The main thing that concerns me are that the microcomputer's available to me (ESP32, Micro:Bit, etc) are quite large. When concidering other aspects like the battery, wiring, etc, it is unlikely that a solution could be made that is easy to use and visually aesthetic. Whereas with the conventional approach I had in mind where a sensor is applied to the user's body, it is more feasable to hide certain components under the shirt of the user. There is also the barrier of development. As mentioned previously, a wearable wrist device like the Zikto Walk would be significantly harder to develop for since I would need to determine how the user's arm swings related to the user's posture, which would require significantly more R&D then I have the ability to. 
 
-
-
 # 3 Design
 
 ## 3.1 Material Considerations
-
-The main obstacle I foresee with this project is the size of the individual components. Since I'm limited to off the shelf parts, that means that I won't be able to create a single compact device that includes the main elements - such as the micro-computer, battery, wiring, sensors, etc. For the purposes of cost/time efficiency, I am going to focus on material's and technology that I have access to and/or experience with. <br>
+The main obstacle I foresee with this project is the size of the individual components. Since I'm limited to off-the-shelf parts, that means that I won't be able to create a single compact device that includes the main elements - such as the micro-computer, battery, wiring, sensors, etc. For the purposes of cost/time efficiency, I am going to focus on materials and technology that I have access to and/or experience with. <br>
 
 ### Micro Controller
 The heart of this project. The micro controller will calculate if the current alignment of the user's back is straight based on a gyroscopic sensor.<br> The main two options available for this project are the Micro:Bit V2's, and ESP32's.
 
 #### Micro:Bit
-Last semester in DES221, the use of micro:bit's were a fundemental aspect of that course. As a result, I not only have one purchased from that course, but I also have the knowledge to develop using it. Using that micro:bit would of course eliminate cost, but more importantly shorten development time since I won't need to learn how to use a Microbit. The Micro:Bit v2 additionally contains a built-in 3-axis accelerometer. it can measure tilt, pitch and roll.
-
-However, it does not have a gyroscrope. Relying purely on an accelerometer means that if the user is moving (walking and especially running), the data can very quickly become noisy and unreadable. To avoid this would require an additional IMU (Intertial Measurement Unit), which can include <b>both</b> a gyroscrope and accelerometer - effectivly elimintating that advantage. A Micro:Bit is also limited it what it can do. The Micro:Bit V2 does not have any Wi-Fi or Bluetooth capabilities and is lacking in computing power.
+Last semester in DES221, the use of micro:bits was a fundamental aspect of that course. As a result, I not only have one purchased from that course, but I also have the knowledge to develop using it. Using that micro:bit would of course eliminate cost, but more importantly shorten development time since I won't need to learn how to use a Micro:Bit. The Micro:Bit V2 additionally contains a built-in 3-axis accelerometer. It can measure tilt, pitch and roll. However, it does not have a gyroscope. Relying purely on an accelerometer means that if the user is moving (walking and especially running), the data can very quickly become noisy and unreadable. To avoid this would require an additional IMU (Inertial Measurement Unit), which can include <b>both</b> a gyroscope and accelerometer - effectively eliminating that advantage. A Micro:Bit is also limited in what it can do. The Micro:Bit V2 does not have any Wi-Fi or Bluetooth capabilities and is lacking in computing power.
 
 #### ESP32
-The ESP32 is the micro controller recommended for this course, and has benefits when compared to the Micro:Bit v2. It has built in Wi-Fi and Bluetooth, is significantly more powerful than the Micro:Bit v2. While I dont actively have experience working with ESP32's, I have direct access to several thanks to a bulk purchase I made a while ago. For me, this means that I have the option to use multiple ESP32's, even if that is unlikely.
-
-Unfortuntely, the ESP32 doesn't contain either a gyroscope or an accelerometer. Therefore, the use of an external IMU will be nessesary if a ESP32 is chosen for the project. Additionally, I have never used an ESP32 before, so developing for it will inherently be more complicated (especially since ESP32's have a more complicated IDE inherently). However, this has the side-effect of increasing the challange of this project which was an attribute I was concerned about when choosing what project to pursure earlier in this project journal.
+The ESP32 is the micro controller recommended for this course, and has benefits when compared to the Micro:Bit V2. It has built-in Wi-Fi and Bluetooth, and is significantly more powerful than the Micro:Bit V2. While I don't actively have experience working with ESP32's, I have direct access to several thanks to a bulk purchase I made a while ago. For me, this means that I have the option to use multiple ESP32's, even if that is unlikely. Unfortunately, the ESP32 doesn't contain either a gyroscope or an accelerometer. Therefore, the use of an external IMU will be necessary if an ESP32 is chosen for the project. Additionally, I have never used an ESP32 before, so developing for it will inherently be more complicated (especially since ESP32's have a more complicated IDE inherently). However, this has the side-effect of increasing the challenge of this project which was an attribute I was concerned about when choosing what project to pursue earlier in this project journal.
 
 ### Sensors
-As mentioned when talking about the micro controllers, an IMU (Intertial Measurement Unit) will be critical for actually knowing the relative state of the user's posture. The following sensors were the most feasable sensor's I've found that can be used with both a Micro:Bit v2 and an ESP32 (allthough, easier to setup with ESP32).
+As mentioned when talking about the micro controllers, an IMU (Inertial Measurement Unit) will be critical for actually knowing the relative state of the user's posture. The following sensors were the most feasible sensors I've found that can be used with both a Micro:Bit V2 and an ESP32 (although, easier to set up with ESP32).
 
 #### MPU-6050
-- 3-axis accelerometer + 3-axis gyroscrope
-- Very Cheap
-- Simple to use
-- Good for basic tilt/posture detection
+- 3-axis accelerometer + 3-axis gyroscope  
+- Very Cheap  
+- Simple to use  
+- Good for basic tilt/posture detection  
 
 #### MPU-6886
-- 3-axis accelerometer + 3-axis gyroscrope
-- Small Size
-- Low Power
-- Slightly better performance and lower noise than MPU-6050
+- 3-axis accelerometer + 3-axis gyroscope  
+- Small Size  
+- Low Power  
+- Slightly better performance and lower noise than MPU-6050  
 
 #### ICM-20948
-- 3-axis accelerometer + 3-axis gyroscope + 3-axis magnetometer
-- Low noise
-- More expensive than MPU-6050 and MPU-6886
-- More setup required
-- Allows for more precise measurements
+- 3-axis accelerometer + 3-axis gyroscope + 3-axis magnetometer  
+- Low noise  
+- More expensive than MPU-6050 and MPU-6886  
+- More setup required  
+- Allows for more precise measurements  
 
 ### Battery
-An ESP32 typically operates between 3.3V - 3.6V, with power consumption varrying based on usage. Whereas a Micro:Bit requires a stable 3V input. Both of the following batteries are apart of the 'Lithium' family, and depending on the specific mAh of the battery, can be used for both Micro:Bit v2 and ESP32's.
+An ESP32 typically operates between 3.3V - 3.6V, with power consumption varying based on usage. Whereas a Micro:Bit requires a stable 3V input. Both of the following batteries are part of the 'Lithium' family, and depending on the specific mAh of the battery, can be used for both Micro:Bit V2 and ESP32's.
 
 #### Li-ion (Lithium Ion) Batteries
-- Family of rechargeable lithium-based cells (different chemistries exist).
-- Often found in rigid cylindrical or prismatic cases.
-- Typically high energy density (Wh/kg), but exact value depends on the chemistry.
-- Mechanically robust and less likely to show visible swelling than pouch cells.
-- Require proper charging and protection
-- Vulnerable to overcharge, short, heat or puncture.
+- Family of rechargeable lithium-based cells (different chemistries exist).  
+- Often found in rigid cylindrical or prismatic cases.  
+- Typically high energy density (Wh/kg), but exact value depends on the chemistry.  
+- Mechanically robust and less likely to show visible swelling than pouch cells.  
+- Require proper charging and protection  
+- Vulnerable to overcharge, short, heat or puncture.  
 
 #### Single Cell LiPo (Lithium Polymer) Batteries
-- A pouch (soft-pack) style of lithium cell (still part of the lithium-ion family).
-- Uses a polymer pouch construction
-- Electrolyte inside LiPo batteries may be gel-like or liquid contained in the pouch.
-- Compact, flat/rectangular and lightweight.
-- Energy density is comparable to other Li-ion cells (sometimes slightly lower depending on chemistry).
-- More prone to visible swelling and mechanically fragile. 
-- Needs proper charging and protection.
+- A pouch (soft-pack) style of lithium cell (still part of the lithium-ion family).  
+- Uses a polymer pouch construction  
+- Electrolyte inside LiPo batteries may be gel-like or liquid contained in the pouch.  
+- Compact, flat/rectangular and lightweight.  
+- Energy density is comparable to other Li-ion cells (sometimes slightly lower depending on chemistry).  
+- More prone to visible swelling and mechanically fragile.  
+- Needs proper charging and protection.  
+
+## Vibration Motors
+In order for this device to be considered 'responsive', it needs to not only react to stimuli, but also have a reaction to that stimuli. Vibration motors make the most sense, as the user needs immediate correction if their posture gets bad.
+
+#### Seeed Mini Vibration Motor
+- Compact size, coin/flat type  
+- Voltage: 3 V (works from ~2–3.6 V)  
+- Produces a light to moderate vibration  
+- Needs a transistor/MOSFET when controlled by an ESP32  
+
+#### 10 mm Cylindrical Vibrator Module
+- Voltage: 3 V–5 V  
+- Higher vibration strength compared to coin motors of similar size  
+- Slightly bulkier than coin motors  
+- Needs a transistor/MOSFET when controlled by an ESP32  
 
 ### General Materials
-In this context, when I say general materials, im refering to the material's used to the construction of the device itself. These can include, but are not limited to:
+In this context, when I say general materials, I'm referring to the materials used for the construction of the device itself. These can include, but are not limited to:
 
 #### Micro Controller Attachment Material
-Both <b>Velcro</b> and <b>Magents</b> are the obvious choises for attaching the device to the user. They are seen on the Upright GO 2 and the Lumo Lift respectively, and are a cheap, lightweight solution for attachment. A final decision can't be made at this stage regarding the use of either, as further testing will conclude how each material fairs in terms of wearability, and strength. However, I have a keen interest in magnets, as that will allow for more modularity, and a more minimalistic appearance.
+Both <b>Velcro</b> and <b>Magnets</b> are the obvious choices for attaching the device to the user. They are seen on the Upright GO 2 and the Lumo Lift respectively, and are a cheap, lightweight solution for attachment. A final decision can't be made at this stage regarding the use of either, as further testing will conclude how each material fares in terms of wearability and strength. However, I have a keen interest in magnets, as that will allow for more modularity, and a more minimalistic appearance. Additionally, a rubber band will be used to wrap around the user's torso to hold the micro controller, battery, and vibration motor.
 
-#### Chase Material
-The actual chase will consist of the structure designed to hold the various components that comprise the final device the user will wear. For this chase, the following material's are the most realistic options for developing this project with. The final design may or may not use a combination of all of these, however the primary chase material will be made with one of the following: 
-- 3D Printed Plastic
-    - Pros
-        - Accessible through university
-        - Durable
-        - Cheap
-        - Have used before in previous DES221 project
-    - Cons
-        - Can't make last minute additions at home
-- Timber
-    - Pros
-        - Durable
-        - Ability to construct with at home
-    - Cons
-        - Heavy
-        - Expensive
-- Cardboard
-    - Pros
-        - Very Cheap
-        - Efficient to create with
-    - Cons
-        - Very Weak
-        - May not be structurally sound enough to hold other components
+#### Case Material
+The actual case will consist of the structure designed to hold the various components that comprise the final device the user will wear. For this case, the following materials are the most realistic options for developing this project with. The final design may or may not use a combination of all of these, however the primary case material will be made with one of the following:  
+
+- 3D Printed Plastic  
+  - Pros  
+    - Accessible through university  
+    - Durable  
+    - Cheap  
+    - Have used before in previous DES221 project  
+  - Cons  
+    - Can't make last-minute additions at home  
+
+- Timber  
+  - Pros  
+    - Durable  
+    - Ability to construct at home  
+  - Cons  
+    - Heavy  
+    - Expensive  
+
+- Cardboard  
+  - Pros  
+    - Very Cheap  
+    - Efficient to create with  
+  - Cons  
+    - Very Weak  
+    - May not be structurally sound enough to hold other components  
 
 ### Material Choices
-Throughout the process of writing down the material's in this process journal, I have been determining what would work well for my proposed device. Given the nature of device, in that it's purpose is to measure the posture of it's wearer. Because of this, I have concluded that more advanced components would suit not just the scope of this project, but fulfill my desire for a challange as well. 
+Throughout the process of writing down the materials in this process journal, I have been determining what would work well for my proposed device. Given the nature of the device, in that its purpose is to measure the posture of its wearer. Because of this, I have concluded that more advanced components would suit not just the scope of this project, but fulfill my desire for a challenge as well.
 
 #### Micro Controller - ESP32
-For the micro controller, the <b>ESP32</b> seems to be the best choice for this project, as it's more powerful and has built-in communication chips. Honestly, both micro controllers can work for this project - however the fact that I dont know how to use an ESP32 is why I want to pursue this further.  
+For the micro controller, the <b>ESP32</b> seems to be the best choice for this project, as it's more powerful and has built-in communication chips. Honestly, both micro controllers can work for this project - however the fact that I don't know how to use an ESP32 is why I want to pursue this further.
 
 #### Sensor - MPU-6886 or MPU-6050
-For the sensor, both the <b>MPU-6886</b> and the <b>MPU-6050</b> are so simular that either one could work for this device. This is because they are both affordable, and work well natively with an ESP32. However, preferably, I would choose an MPUJ-6886, simply because it's slightly more advanced and reduces it's random noise in it's reading.
+For the sensor, both the <b>MPU-6886</b> and the <b>MPU-6050</b> are so similar that either one could work for this device. This is because they are both affordable, and work well natively with an ESP32. However, preferably, I would choose an MPU-6886, simply because it's slightly more advanced and reduces its random noise in its reading.
 
 #### Battery - LiPo (Lithium Polymer) Battery
-The LiPo battery will suit this project better, and it's slim, affordable, and lightweight. Additionally, it  has energy density on par with other lithium based options.
+The LiPo battery will suit this project better, as it's slim, affordable, and lightweight. Additionally, it has energy density on par with other lithium-based options. But primarily, it's shape will make it easier to attach comfortably to the user.
 
-#### Chase Material - 3D Printing
+#### Vibration Motor - 10 mm Cylindrical Vibrator Module
+As mentioned several times over this process journal, the final solution needs to be as minimalistic and functional as possible. The 10 mm Cylindrical Vibrator Module can achieve this by having a stronger vibration compared to other options whilst still being a smaller size. This ensures the wearer can feel the vibration when their posture has slouched, without feeling any unnecessary weight in addition to what the final solution will already weigh.
+
+#### Case Material - 3D Printing
 3D printing is very much the obvious choice for this device. It's affordable, lightweight, durable and is readily available at the university.
 
+
 ## 3.2 Prototype Sketches
-Below are some proposed prototype sketches, made using the material's decided previously.
+Below are some proposed prototype sketches, made using the materials decided previously.
+
+### Prototype Sketch 1
+<img src="./images/Design 1.jpg" alt="Prototype Sketch 1" width="600">
+
+With this first initial design, I wanted to go for something simular to the existing solutions i've seen. Specifically, I really liked how the Lumo Lift had the sensor rest under the shirt near the neck. I have done something simular here, with the MPU-6886 sensor being seperate from the elastic band the user is wearing around his chest. Doing this, will reduce the stress on the shirt had all the components been placed at the same spot as the sensor, as well as making it less top heavy for the user. The sensor will be held up with a clip that clings to the user's collar. Additionally, an elastic band has been placed around the user's chest that contains the micro controller, battery and vibration module. Each component will have a custom 3D printed container, as that will help protect these sensitive components, as well as allow velcro to be easily applied. Velcro is also applied to the elastic band as well, so that these components can be easily detached for whatever reason. The ESP32 is placed at the center (the yellow module) so that it has a clear connection to the other components as well. 
+
+### Prototype Sketch 2
+<img src="./images/Desgin 2.jpg" alt="Prototype Sketch 2" width="600"><br>
+This design is very simular to the first one, except with this one there are 2 major changes. Firstly, the elastic band has been moved up above the gut. This was done, because after reflecting on the original design, it occured that having the band wrap around the chest could cause difficulty breathing - especially if the user is particularly active. Secondly, the clip at the collar has been replaced for duel magnets that rest perpendicular to the MPU-6886 sensor. This change was made for 2 reasons. Aesthetics - avoiding an ugly pin pertruding at the top of the collar, and Grip - 2 perpendicular magnets will allow for finer adjustments from the user, whilst providing more strength then a single clip. As a result of this increased strength, the user in theory should be able to be more active with this device on without it coming off as easily.
+
 
 # 4 Development
 (No current development at this time)
@@ -258,7 +283,7 @@ Below are some proposed prototype sketches, made using the material's decided pr
 (No current development at this time)
 
 ## 4.3 Construction
-(No current development at this time           )
+(No current development at this time)
 
 ## 4.4 Finished Device
 (No current development at this time)
@@ -270,7 +295,4 @@ Below are some proposed prototype sketches, made using the material's decided pr
 (No current testing at this time)
 
 # References
-
 Luis, J., & Rosario, J. (2017). What is Posture? A Review of the Literature in Search of a Definition. https://ecronicon.net/assets/ecor/pdf/ECOR-06-00168.pdf
-
-‌
