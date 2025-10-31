@@ -274,18 +274,28 @@ This design is very simular to the first one, except with this one there are 2 m
 
 
 # 4 Development
+
+## 4.1 ESP32 Test Project
+To better understand how to use an ESP32 for this project, I decided to experiment with a personal project. As mentioned previously, I have a smart home integration using home assistant. With that integration, somes lights are from a brand called 'govee', and while they are good value and provide good RGB, they don't communicate over zigbee - instead they use Wi-Fi and/or Bluetooth. To get around this, I used a cloud API that contacts govee's servers directly to send a signal through my govee account to my lights. While this worked, It posed issues, such as - limited to 10 requests per minute, if Wi-Fi ever goes down I am locked out of my lights, and response times were noticably slow when compared to the native zigbee lights already integrated. As this problem has always been on the back of my mind, I figured that solving this would be a really good learning opportunity since it is addressing a problem I had.
+
+Instead, what I ended up doing was using an ESP32 as a bluetooth proxy that can allow home assistant to communicate with the govee lights locally. Inplmenting this was difficult, as this was the first major project ive done with an ESP32. I ran into issues connecting the ESP32 to my computer during this process, which I found was because; A) the USB-C cable I was using was not a data cable - instead it only delivered power, and B) My operating system didnt have the proper drivers installed to communicate with the ESP32.  Additionally, Learning how to flash the ESP32 on linux was especially challenging since this specific solution had a [community ready-made file](https://esphome.io/projects/) available to use that I wasn't familar with. 
+
+Afterward solving those initial set backs and connecting the ESP32 to home assistant, I can now control my govee lights locally using bluetooth. Im glad I experimented with this initial project, because it was simple enough to let me understand the basics about an ESP32, while forcing me to solve the initial connection issues in an environment where I have more community support. 
+
+## 4.2 MPU-6050 Configuration
+The choice to use either the MPU-6886 or the MPU-6050 ultimately comes down to price and ease of access as they both ultimately serve the same purpose. In the context of  
+
+
+## 4.2 Final Sketches
 (No current development at this time)
 
-## 4.1 Final Sketches
+## 4.3 Code
 (No current development at this time)
 
-## 4.2 Code
+## 4.4 Construction
 (No current development at this time)
 
-## 4.3 Construction
-(No current development at this time)
-
-## 4.4 Finished Device
+## 4.5 Finished Device
 (No current development at this time)
 
 # 5 Testing
