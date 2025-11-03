@@ -283,8 +283,33 @@ Instead, what I ended up doing was using an ESP32 as a bluetooth proxy that can 
 Afterward solving those initial set backs and connecting the ESP32 to home assistant, I can now control my govee lights locally using bluetooth. Im glad I experimented with this initial project, because it was simple enough to let me understand the basics about an ESP32, while forcing me to solve the initial connection issues in an environment where I have more community support. 
 
 ## 4.2 MPU-6050 Configuration
-The choice to use either the MPU-6886 or the MPU-6050 ultimately comes down to price and ease of access as they both ultimately serve the same purpose. In the context of  
+The choice to use either the MPU-6886 or the MPU-6050 ultimately comes down to price and ease of access as they both ultimately serve the same purpose. Even though the MPU-6886 was preferred because of the added features, I ultimately purchased the MPU-6050 due to cheaper listing on amazon and faster delivery times. Upon arrival, the MPU-6050 came with two distinct set of pins, which means that I need to solder the set of pins on that would best suit my project. Considering how this project will ultimately take place on a breadboard attached to the users waist, I decided to go with the straight set of set included, compared to the L shaped pair of pins that. <br>
+<br>
+Allthough it's been a while, I have done soldering in high school for certain STEM related assignments - so I didn't have to worry about the soldering itself. Additionally, my Dad already had a soldering iron in his shed that I could use to solder the pins to the MPU-6050. This means I didnt have to wait for a dedicated university workshop to solder anything. After a quick google search, and a YouTube tutorial to remind myself on safe soldering practices - I successfully soldered the MPU-6050 to pins.
+<br><br>
+<b>Solder Iron</b>:
+<br>
+<img src="./images/soldier iron.jpg" alt="Solder Iron" width="600">
+<br>
+<b>MSP-6050 soldered onto pins</b>:
+<br>
+<img src="./images/6050 soldered.jpg" alt="MSP-6050 Soldered" width="600">
 
+After the soldering was complete, I needed to test that it was functional and that I correctly soldered it together. To do this, my plan was to use the knowledge developed with the test project I conducted to flash the ESP32 with a locally hosted website that would respond to the MSP-6050 depending on it's orientation. To do this, I first downloaded an online library for the MPU-6050 that works with the Arduino IDE I was using to flash the ESP32. It took a few attempts to get the MSP-6050 to connect - as this was my first time importing a community made library, and as I wasn't fully sure how to connect to the MSP-6050, but eventually I was able to get it to connect after looking on different forums and trying three seperate libraries. I tested the functionality of the MPU-6050 by creating a script that initialised connection to the MPU-6050 and print it's current accelerometer status to serial line '115200'.
+<br><br>
+The MPU-6050 has two seperate measurements, the accelerometer (measures linear acceleration, i.e., change in velocity) and a gyroscope (Angular velocity, i.e., how fast and in what direction you're rotating). Since the goal of tracking the user's posture is relatively simple, the accelerometer by itself should be enough - as the printed information of the accelerometer's 'Z' axis was able to accurately measure what direction the MPU-6050 was facing. 
+<br><br>
+<b>MSP-6050 Printed Values</b>:
+<br>
+<img src="./images/MSP-6050 values.png" alt="MSP-6050 Values" width="600">
+<br>
+The ranges printed range from -17000 through to 17000, and to conclude what value's would best represent good posture, I wrote a script that host's a web server on the ESP32 using the 'WebServer.h' library. I chose to do this as I had just finished another assignment which used flask, and I figured it would be a good excuse to use the knowledge I had just built as well as make visual indicators as to what orientation is currently active. After another round of forum reading and research, I constructed a script that uses a mixture of HTML, CSS and JavaScript all flashed onto the ESP32 itself, that prints the live values of the accelerometer's 'Z' axis in the form of a title heading. By roughly placing the sensor on my own neck and looking at the printed values, I was able to conclude that anything above 14500 was ideal for good posture. Afterwards, I made some small adjustments to verify this assumption, which primarily meant that whenever the value of the accelerometer's 'Z' axis went above this number, the page background color would turn green, otherwise it would turn red. After flashing and testing this improved script - that value of above 14500 seemed to be a sweet spot for good posture. This script is included in the GitHub repository under the name "MSP-6050 Web Client for Debugging.ino".
+<br><br>
+<b>MSP-6050 Web Client</b>:
+<br>
+<img src="./images/MPU-6050 Web Client Positive.png" alt="MSP-6050 Positive Page" width="600">
+<br>
+<img src="./images/MPU-6050 Web Client Negative.png" alt="MSP-6050 Negative Page" width="600">
 
 ## 4.2 Final Sketches
 (No current development at this time)
