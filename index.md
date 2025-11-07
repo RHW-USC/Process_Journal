@@ -202,7 +202,7 @@ In order for this device to be considered 'responsive', it needs to not only rea
 - Needs a transistor/MOSFET when controlled by an ESP32  
 
 #### 10 mm Cylindrical Vibrator Module
-- Voltage: 3 V–5 V  
+- Voltage: 3V – 5V on average  
 - Higher vibration strength compared to coin motors of similar size  
 - Slightly bulkier than coin motors  
 - Needs a transistor/MOSFET when controlled by an ESP32  
@@ -297,19 +297,58 @@ Allthough it's been a while, I have done soldering in high school for certain ST
 
 After the soldering was complete, I needed to test that it was functional and that I correctly soldered it together. To do this, my plan was to use the knowledge developed with the test project I conducted to flash the ESP32 with a locally hosted website that would respond to the MSP-6050 depending on it's orientation. To do this, I first downloaded an online library for the MPU-6050 that works with the Arduino IDE I was using to flash the ESP32. It took a few attempts to get the MSP-6050 to connect - as this was my first time importing a community made library, and as I wasn't fully sure how to connect to the MSP-6050, but eventually I was able to get it to connect after looking on different forums and trying three seperate libraries. I tested the functionality of the MPU-6050 by creating a script that initialised connection to the MPU-6050 and print it's current accelerometer status to serial line '115200'.
 <br><br>
-The MPU-6050 has two seperate measurements, the accelerometer (measures linear acceleration, i.e., change in velocity) and a gyroscope (Angular velocity, i.e., how fast and in what direction you're rotating). Since the goal of tracking the user's posture is relatively simple, the accelerometer by itself should be enough - as the printed information of the accelerometer's 'Z' axis was able to accurately measure what direction the MPU-6050 was facing. 
+The MPU-6050 has two seperate tools for measurement. The accelerometer (measures linear acceleration, i.e., change in velocity) and a Gyroscope (Angular velocity, i.e., how fast and in what direction you're rotating). As it turns out, the goal of tracking the user's posture is relatively simple and didnt require the use of the gyroscrope as the accelerometer by itself was enough. To be more specific, the printed values indicate that the accelerometer's 'Z' axis was able to accurately measure what direction the MPU-6050 was facing when roughly placed against my neck. 
 <br><br>
 <b>MSP-6050 Printed Values</b>:
 <br>
 <img src="./images/MSP-6050 values.png" alt="MSP-6050 Values" width="600">
 <br>
-The ranges printed range from -17000 through to 17000, and to conclude what value's would best represent good posture, I wrote a script that host's a web server on the ESP32 using the 'WebServer.h' library. I chose to do this as I had just finished another assignment which used flask, and I figured it would be a good excuse to use the knowledge I had just built as well as make visual indicators as to what orientation is currently active. After another round of forum reading and research, I constructed a script that uses a mixture of HTML, CSS and JavaScript all flashed onto the ESP32 itself, that prints the live values of the accelerometer's 'Z' axis in the form of a title heading. By roughly placing the sensor on my own neck and looking at the printed values, I was able to conclude that anything above 14500 was ideal for good posture. Afterwards, I made some small adjustments to verify this assumption, which primarily meant that whenever the value of the accelerometer's 'Z' axis went above this number, the page background color would turn green, otherwise it would turn red. After flashing and testing this improved script - that value of above 14500 seemed to be a sweet spot for good posture. This script is included in the GitHub repository under the name "MSP-6050 Web Client for Debugging.ino".
+The values printed range from -17000 through to 17000, and to conclude what value's would best represent good posture, I wrote a script that host's a web server on the ESP32 using the 'WebServer.h' library. I chose to do this as I had just finished another assignment which used flask, and I figured it would be a good excuse to use the knowledge I had just built as well as make visual indicators as to what orientation is currently active. After another round of forum reading and research, I constructed a script that uses a mixture of HTML, CSS and JavaScript all flashed onto the ESP32 itself, that prints the live values of the accelerometer's 'Z' axis in the form of a title heading. By roughly placing the sensor on my own neck and looking at the printed values, I was able to conclude that anything above 14500 was ideal for good posture. Afterwards, I made some small adjustments to verify this assumption, which primarily meant that whenever the value of the accelerometer's 'Z' axis went above this number, the page background color would turn green, otherwise it would turn red. After flashing and testing this improved script - that value of above 14500 seemed to be a sweet spot for good posture. This script is included in the GitHub repository under the name "MSP-6050 Web Client for Debugging.ino".
 <br><br>
 <b>MSP-6050 Web Client</b>:
 <br>
 <img src="./images/MPU-6050 Web Client Positive.png" alt="MSP-6050 Positive Page" width="600">
 <br>
 <img src="./images/MPU-6050 Web Client Negative.png" alt="MSP-6050 Negative Page" width="600">
+
+## 4.3 LiPo Battery Configuration
+I decided to purchase a 600mHAh battery with a voltage delivery of approximately 3.7V - 4.2V when charged, and only cost me $10 off of Amazon. Because the power requirements of this solution are so low, and the fact it's just a prototype - means that any LiPo battery with more capacity would have cost significantly more money, been physically larger and potentially larger to mount to the user comfortable, and presented a very insignificant difference in overall usability. 
+<br><br>
+<b>LiPo Battery:</b>
+<br>
+<img src="./images/LiPo Battery.jpg" alt="LiPo Battery" width="600">
+
+The LiPo battery itself as it turned out presented several disctinct challanges for this project. The more pressing issue when trying to operate the ESP32 was the fact that if I ever wanted to charge the battery, I would be required to connected a direct current to the ground and power pins on the battery. A massive fire hazzard. This was not something I thought about when researching the LiPo battery initially, and after some research I am to the conclusion that a seperate charging regulating module was required. This module would ensure that the LiPo battery charges at a safe and consistent voltage and reduces the overall chance of the battery exploding if it ever began to swell. The LiPo batterys ground and power cables would be soldered onto the module, in addition to two new ground and power cables that will connect to the ESP32.
+
+Because the LiPo battery I purchased only uses about 3.7 - 4.4V of electricity, it doesn't require a very sophisticated charging regulator. After some research, I was able to pick up the 'TP4056' off of amazon for close to $10 which came in a pack of 10. Despite being good value, this specific module doesn't offer a dedicated voltage regulator that will provide a consistent 5V current. Fortunately the ESP32 module i'm using DOES has a built-in regulator, in addition to the lower requirements of the 3.3v pin that I am connecting the MPU-6050 and vibration module to.
+
+### Soldering
+The first step for soldering the LiPo battery to the TP4056 charge connecter is to figure out what to do about the connector at the end of the LiPo Battery.
+<br><br>
+<b>JST-PH 2.0 Connector Close Up:</b>
+<br>
+<img src="./images/JST-PH 2.0 connector.jpeg" alt="JST-PH 2.0 Connector Close Up" width="300">
+
+I knew I had to solder the wire's directly to the TP4056, but I wasn't sure if I needed to take off the connector without cutting the cables - and at one point I tried to pull it off entirely. It took at least 30 minutes for me to realise I was just able to use tweezers to cut the wires.
+
+Afterwards, I took 2 of the pin cables that came with my Micro:Bit bundle as part of last semesters DES221, and trimmed the tops using the same set of tweezers and soldered the exposed ends onto the TP4056. This attempt took at least an hour due to solder metal drtipping off the cables - and having the solder metal leak onto the other pins which could have caused a short circut if not removed.
+<br><br>
+<b>Soldered LiPo Battery:</b>
+<br>
+<img src="./images/Soldered LiPo Battery.jpg" alt="Soldered LiPo Battery" width="600">
+
+## 4.4 Short Circut Disaster
+After getting the LiPo battery soldered onto the TP-4056, I went to test it with the live web demo I've discussed previously for the MSP-6050. I connected both the LiPo power out and MPU-6050 power out to the 3.3v pin on the ESP32. You may have noticed the error straight away, but doing this completely fried my MPU-6050. So much so, to the point where the solder points on the MPU-6050 physically burnt my finger.
+
+Despite the model of ESP32 i'm using having a built in voltage regulator (ESP32 Wroom 32D), hooking up the LiPo battery directly to the 3v pin exposed the MPU-6050 directly to the batterys raw voltage. Fortunately, the ESP32 itself was disconnected from the battery before it was fried itself.
+
+Instead, what I should have done was connected the LiPo power cable to the 5v pin on the other side of the ESP32, where it then would have been regulated and delivered to the MPU-6050. Because of this error, I will need to purchase another MPU-6050 as I only purchased the one when I ordered it. Since I need it ASAP because of the approaching deadline - it's going to cost $20 for a replacement one.
+
+The Diagram below show's the error I made and the pins I should have connected to instead.
+<br><br>
+<b>Diagram Depicting Short Circut:</b>
+<br>
+<img src="./images/Short Circut Illustration.jpg" alt="Short Circut Illustration" width="600">
 
 ## 4.2 Final Sketches
 (No current development at this time)
