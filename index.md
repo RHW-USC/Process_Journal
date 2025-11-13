@@ -273,7 +273,7 @@ With this first initial design, I wanted to go for something simular to the exis
 This design is very simular to the first one, except with this one there are 2 major changes. Firstly, the elastic band has been moved up above the gut. This was done, because after reflecting on the original design, it occured that having the band wrap around the chest could cause difficulty breathing - especially if the user is particularly active. Secondly, the clip at the collar has been replaced for duel magnets that rest perpendicular to the MPU-6886 sensor. This change was made for 2 reasons. Aesthetics - avoiding an ugly pin pertruding at the top of the collar, and Grip - 2 perpendicular magnets will allow for finer adjustments from the user, whilst providing more strength then a single clip. As a result of this increased strength, the user in theory should be able to be more active with this device on without it coming off as easily.
 
 
-# 4 Development
+# 4 Component Testing and Soldering
 
 ## 4.1 ESP32 Test Project
 To better understand how to use an ESP32 for this project, I decided to experiment with a personal project. As mentioned previously, I have a smart home integration using home assistant. With that integration, somes lights are from a brand called 'govee', and while they are good value and provide good RGB, they don't communicate over zigbee - instead they use Wi-Fi and/or Bluetooth. To get around this, I used a cloud API that contacts govee's servers directly to send a signal through my govee account to my lights. While this worked, It posed issues, such as - limited to 10 requests per minute, if Wi-Fi ever goes down I am locked out of my lights, and response times were noticably slow when compared to the native zigbee lights already integrated. As this problem has always been on the back of my mind, I figured that solving this would be a really good learning opportunity since it is addressing a problem I had.
@@ -350,23 +350,160 @@ The Diagram below show's the error I made and the pins I should have connected t
 <br>
 <img src="./images/Short Circut Illustration.jpg" alt="Short Circut Illustration" width="600">
 
-## 4.2 Final Sketches
-(No current development at this time)
+## 4.5 Aftermath and Vibration Module
+Since the MSP-6050 has been fried, I am at this stage 'technically' unable to create a prototype. However, thankfully I did work on the inplementation and code for the MSP-6050 using DC from my computer and therefore can still modify that code to work with these extra additions.
 
-## 4.3 Code
-(No current development at this time)
+While I wait for a replacement 6050 to arrive, I'll spend this time getting the other elements working in the meantime.
 
-## 4.4 Construction
-(No current development at this time)
+The final component of this project to be discussed is the vibration module. As and discussed previously, a series of cylindrical vibration modules will be used and strapped to the user's back to alert them of their posture levels. The exact number will varry depending on the intensity of the individual modules.
 
-## 4.5 Finished Device
-(No current development at this time)
+I purchased a pack of 4 vibration modules that need to be individually soldered onto different cables. I did the soldering with the exact same setup used to solder the LiPo battery, and aside from challanges getting the solder to stick the two seperate wires, it went a lot faster then the soldering for the LiPo battery.
+<br><br>
+<b>Soldered Vibration Module:</b>
+<br>
+<img src="./images/Soldered Vibration Module.jpg" alt="Soldered Vibration Module" width="600">
 
-# 5 Testing
-(No current testing at this time)
+The code for this vibration module was extreamly simple. All I had to do was toggle a specific pin on and off and have the power for the vibration module match the pin in the code. After creating a sample script that powers the motor for 3 seconds, then pauses - I have concluded that the strength of a single motor is more then enough to alert the user. 
 
-## 5.1 Functionality Test
-(No current testing at this time)
+My plan at this stage, is modify the MPU-6050 web script so that when the user's posture level is below the determined value of 14500, the vibration module will be actived alerting the user of pronotation.
+
+# 5 Prototype Creation
+
+## 5.1 Foundation Planning
+At this stage, I have all the core aspects of the prototype functioning independently. All that's left now, is to combine these individual segemnts into a single prototype. The original intention is to create a prototype that combines all these aspects together. 
+
+The original intention was to create a proper frame around each component and attach that to the user's waist with some kind of adhesive. Now at this stage, it's unlikely I'll be able to achieve that frame because of the added complication of the MPU-6050 frying and the approaching deadline for this task. Instead, I'll most likely use some form of tape to stick the components directly to the band.
+
+At this stage, I'm going to focus on the band itself that wraps around the user. The band was always intended to be some kind of elastic band that goes around the user, with some form of clip that ties it neatly around the user. Since I am now aware of the individual charectaristics of these components, I am now better able to orchestrate a design that suit's this project without the guesswork that came with the original design sketeches.
+
+The following sketch describes the approximate sizing, and component placement based on the soldering, and accessibility to other components. The following design also portrays the likely placement of the wires that correspond with each component and their connections.
+<br><br>
+<b>Altered Final Prototype Design:</b>
+<br>
+<img src="./images/Final Design.jpg" alt="Final Design" width="600">
+
+## 5.2 MSP-6050 Replacement and Soldering
+The new MSP-6050 arrived earlier then expected. I broke the MSP-6050 on a Saturday, and the replacements were projected to arrive by Tuesday. They arrived Monday. This gave me some time to play with both of these sensors and ensure that they are both working - as well as double check the ESP32 still functions.
+
+Before I can use them on the ESP32 - I need to solder these new ones like I did with the original MSP-6050 that I broke. Thankfully, since I knew what I was doing this time around - it took about 1/4 of the time to solder these two new MSP-6050s then it took for the single MSP-6050 last time.
+
+With the MSP-6050's soldered, I crossed my fingers and connected them to my ESP32 and found that it was working! I tested both of them to be sure, and thankfully they were both operational. To ensure that I don't lose the second MSP-6050, I decided to stick it onto the breadboard in the corner.
+
+## 5.3 ESP32 Code
+With the MSP-6050 soldered together and functioning, I can finally begin the finishing touches of filtering out noise from the accelerometer, and actually activating the vibration module when the user's posture is beyond defined scope.
+
+From the code created during the ESP32 webpage testing - I stripped away all of the website server related code since I now have the physical vibration module. In addition, since the vibration module is really simple to trigger in code (only requiring a single pin to trigger), I activated the pin during the conditional check on whether the MSP-6050 is within it's defined thereshold or not. This worked, however as I feared internally, the vibration module was really sensitive to activation and often triggered for short bursts when the MSP-6050 was well within it's defined threshold. I had a couple of idea's on how I was going to handle this.
+
+My plan initially was to use a dedicated smoothing algorithm that would smooth out the data collected from the accelerometer. However, while I was analysing the data being printed by the MSP-6050's accelerometer, I noticed that were was only ever one or two 'outlier' readings that triggerd the vibration on a false positive out of every 30 prints or so. From this, I had the idea of collecting these values, and calcuating the average value and making the vibration module react to that. In my head, this was a more ideal solution because it would encourage me to figure this out by myself - rather than just incorporating an algorithm that's been fine tuned for such instruments. My plan was to add every value read by the acceleromer, and add those to a list. From there, I was going to determine an interval to check the contents of this list and calculate the average. This was really simple on paper and would have taken me 5 minutes to inplement on python or another higher-level language. However, since the ESP32 using the arduino development environment - it uses the C programming language. 
+
+As it turns out, C does not have a 'List' parameter like higher-level languages do. I needed lists specifically because the contents needed to be dynamic as it was impossible to fully predict how many readings the MSP-6050 will provide. Because of this, the conventional storage datatype for C 'arrays' wouldn't have worked because they need to be assigned a length at creation. After some research, I found that in order to incorporate list functionality, I would have to manually inplement a concept called 'Linked Lists'. Linked Lists are actually really cool. They take advantage of pointers found in 'C' to effectively chain together a series of values in a defined order. According to Jacob Sorber (2019), Each node (or list entry as it's called) has the data for the value itself, and the data for a pointer for the next node in the chain. Because this takes advantage of pointers, even if a new node is inserted into the middle of the chain all that needs to be modified are the pointers in the two surrounding nodes. This means that the value stored doesn't have to be changed in memory which saves both time and resources. The diagram below is a rough example of the chain like structure that connects the nodes together.
+<br><br>
+<b>Linked List Chain Diagram:</b>
+<br>
+<img src="./images/Linked Lists Diagram.jpg" alt="Linked Lists" width="600">
+
+From here, it was as simple as looping through all the nodes starting at the head whenever a certain amount of time has passed. Now in order to actually determine how much time has passed in code - I began a search down a massive rabbit hole looking into different libraries to import for time management in C and to make sure that it's consistent with real work time. Fortunantly, I discovered fairly quickly that there was a built in 'Millis' function that gave the current time in millimeters since january 1st 1970 which I could subtract from a previously stored value of millis to determine the time passed in milliseconds. From here, it was as simple checking if that subtracted value exceeded a set interval and begin the check from there.
+
+Aside from slight syntax errors, it suprisingly worked on my first attempt flashing it to the ESP32. I originally set it to be every seconds (1000 milliseconds) but I found that to be too slow to refresh, so I settled on half a seonc (500 milliseconds). Because of the code finging the average of the MSP-6050 values in a set interval of time, it was able to effectively ignore outliers - which felt really good to get working.
+
+The final code in this project can be found in "Posture_Tracker_Finished_Code.c".
+
+## 5.4 Physical Prototype Creation
+
+### 5.4.1 Materials
+
+With the code operational, all that's left is to actually begin construction on the physical prototype. Before the MSP-6050 was fried, I had already collected the material's I would need for this project. Previously, I have discussed different material's that could work well for this prototype. Looking back at that, I definently over-estimated the quality of material's I would need - as I realised that having 3D printed chases over every single components is absoloutly not nessesary for this prototype, for example. With that in mind - I opted for more simple materials, such as a simple elastic resistance band that goes across the user's waist, velcro strips to attach the two sides together, and magnets to hold the MSP-6050 to the user's neck.
+<br><br>
+<b>Elastic Resistance Band:</b>
+<br>
+<img src="./images/Elastic Resistance Band.jpg" alt="Elastic Resistance Band" width="600">
+<br><br>
+<b>Vecro:</b>
+<br>
+<img src="./images/Velcro Box.jpg" alt="Velcro" width="600">
+<br><br>
+<b>Magnets:</b>
+<br>
+<img src="./images/Magnet Box.jpg" alt="Magnets" width="600">
+
+### 5.4.2 Construction
+
+Using these materials, I started construction based on the final sketched design. The first thing I did was apply the velcro to either side of the resistance band to ensure it can be closed. I wasn't sure if I was going to be able to take off the velcro strips without destroying the resistance band if a mistake was made. My fear was that if I attached the breadboard and the velcro was then misplaced it would cause damage to the resistance band trying to remove the velcro. Therefore, leaving the breadboard stuck on a broken band. Fortunantly, I was able to apply the velcro without any issues. 
+<br><br>
+<b>Velcro Attached:</b>
+<br>
+<img src="./images/Velcro Closeup.jpg" alt="Velcro Attached" width="600">
+
+The breadboard I used for testing had an adhesive I could peel off and apply - so I attached that to the center of the resistance band.
+<br><br>
+<b>Breadboard Closeup:</b>
+<br>
+<img src="./images/Breadboard Closeup.jpg" alt="Breadboard Closeup" width="600">
+
+Afterwards, I applied the vibration module and battery onto the resistance band on either side of the breadboard - using tape to stick them in place. I didnt want to use any permanent solution like glue - in case a component had an issue. I have learnt my lesson from the MSP-6050. 
+<br><br>
+<b>Vibration Module Closeup:</b>
+<br>
+<img src="./images/Vibration Module Closeup.jpg" alt="Vibration Module Closeup" width="600">
+<br><br>
+<b>Battery Closeup:</b>
+<br>
+<img src="./images/Battery Closeup.jpg" alt="Battery Closeup" width="600">
+
+With all the components physically attached to the resistance band, I needed to determine how to anchor the MSP-6050 to the user's neck. In the prototype sketches I made, I didn't think too much about the material used to connect the magnets and the MSP-6050. I considered using a cut elastic band to connect the MSP-6050 and the magnets, but decided against it as I had trouble getting the rubber band to stick to the MSP-6050. I ultimately decided to use string I had lying around to save me needing to do more shopping. I simply tied the string around the cables connecting into the pins on the MSP-6050, and then attached magnets on either side. 
+<br><br>
+<b>MSP-6050 Magnet Attachments:</b>
+<br>
+<img src="./images/Prototype MSP-6050 Prototype Magent Attachments.jpg" alt="MSP-6050 Magnet Attachments" width="600">
+
+With this, the physical construction was effectively complete. All I have left to do is physically test the device and ensure that it functions as indended.
+
+## 5.5 Testing
+
+When I began testing for this prototype, I realised straight away just how difficult it is to put this on by myself. There are two elements that I didn't take into account when designing this prototype, and that was toggling the prototype on and off, and comfortably anchoring the MSP-6050 to my neck using magnets. To assist me in testing, I used my sister to both manage the power while im wearing it, and more importantly assist me in anchoring the magnets to my body. For the first few tests, I opted to have power through USB while sitting down, so I can better configure the MSP-6050 values. 
+
+It was during this testing, that I realised that the duel magnet mount solution I came up with was really impracticle. When I came up with the design I failed to account for the fact that my shirt will sage, and contort. This means that with the duel anchor setup, the MSP-6050 is rarely, if ever pinned against my back. This means that the readings gathered are unreliable. In addition, the sketch I provided had the magnets resting on the shirts collar above the MSP-6050. Placing the magnets in that spot causes the shirt to sage and contort even further. The work-around I found for the magnet sagging on the shirt collar specifically was to place the magnets closer to my shoulder blades - to ensure that the weight distribution was more spread out. Even then, it still didn't pin the MSP-6050 to my neck.
+<br><br>
+<b>MSP-6050 On Back (This image was taken with someone holding one side of the magnet so it appears straight):</b>
+<br>
+<img src="./images/Prototype MSP-6050 Closeup.jpg" alt="MSP-6050 On Back" width="600">
+<br><br>
+<b>Magnets on Shoulder:</b>
+<br>
+<img src="./images/Prototype Magnet Closeup.jpg" alt="Magnets on Shoulder" width="600">
+<br><br>
+<b>Full Body Image:</b>
+<br>
+<img src="./images/Prototype Portrait on User.jpg" alt="Full Body Image" width="600">
+
+I wasnt sure what to do here. I didnt want to go out and buy any more materials since I had already spent close to $70 AUD on this project. I ultimately just decided to call it quits for the night, and try again the next day. I knew I wanted the magnets to be used to mount the MSP-6050. It made the most sense, because I need to be able to adjust the fit dynamically, and it's also the main option used for mounting on a couple of the simular solutions discussed previously. I originally avoided having the magnet attached to the MSP-6050 module itself because of fear that it would interfere with it's readings, but I was getting desperate. I used bluetack to attach a magnet onto the MSP-6050, and with the prototype spread across my desk - I tested the readings on the MSP-6050 with the magnets attached. To my suprise, it read it just fine. I concluded that only the gyroscope was affected by the magnets, but since I wasn't using those for this project anyways it didn't end up affecting the solution. 
+
+With this knowledge in mind, I got my sister to help me put on my prototype and attach the MSP-6050 directly to my neck. This time it was perfect. The magnets pinned the MSP-6050 perfectly straight for accurate readings. With the MSP-6050 now responding more accurately to my posture. Unfortunantely, I've noticed that the use of tape and the material of the resistance band makes the vibration module not feel as intnese as I expected. You can still feel it (and hear it), but it's not as <b>impactful</b> as I had in mind.
+
+With it now working - I tested the prototype to find that the value of above 14500 was way too high. After some more trial and error with the code, I found the value of anything above 10100 worked really well. Additionally, the prototype also works under the shirt as well as I originally intended.
+
+With the prototype functioning with me, I needed to make sure that other people can use this prototype and have it function in the same way. For this, I got two of my family members to try on the prototype.
+<br><br>
+<b>Test Subject 1:</b>
+<br>
+<img src="./images/Prototype Test Subect 1.jpg" alt="Test Subject 1" width="600">
+<br><br>
+<b>Test Subject 2:</b>
+<br>
+<img src="./images/Prototype Test Subect 2.jpg" alt="Test Subject 2" width="600">
+
+It worked really well. The value of 10100 was indeed a good sweet spot that worked for a broader audience. 
+
+Finally, with the prototype fully functional, I got my test subjects to walk around my home with the LiPo battery powering the prototype (ensuring I connected the LiPo battery to the 5v pin this time) and it worked without any major issues. I used this opportunity during testing to film some segments for the video proposal as well. 
+
+## 6 Conclusion and Final Thoughts
+This project has easily been the most fun I have ever had working on any academic assignment. This assignment for me was the perfect blend of engagement, challenge and practical application. Especially compared to DES221, where I wasn't able to participate as much to the group project due to communciation issues. This project has allowed me to effectively 'redeem' myself. On that same note, I'm glad that I did this project alone and not in a group. Purely because I have been able to maintain creative freedom and solve these challenges on my own.
+
+If I were to redo this task - I would for sure put more emphasis into making a prototype that is more elegant. For example, using a solderable breadboard, making the solution easier to put on by myself, using more tactile materials other then tape, etc. But honestly, other then that I am really pleased with how this project has concluded.
+
+Thank you so much for joining me on this journey.
 
 # References
 Luis, J., & Rosario, J. (2017). What is Posture? A Review of the Literature in Search of a Definition. https://ecronicon.net/assets/ecor/pdf/ECOR-06-00168.pdf
+
+Jacob Sorber, (2019, July 31). Understanding and implementing a Linked List in C and Java [Video]. YouTube. https://www.youtube.com/watch?v=VOpjAHCee7c
