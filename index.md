@@ -132,7 +132,7 @@ Out of the three devices listed, the Zikto Walk is definitely the most unique. I
 
 <br>
 
-It's reassuring to know that so many varied solutions for a posture analyser exist, and that I dont have to completely start from scratch. These distinct products are all trying to achieve the same goal but through various means. But for the purposes of my solution, I want a device that is as compact as possible while also being as user-friendly to use (and wear) as possible, while being visually aesthetic. For this reason, I would steer clear of the more visually hostile implementation found with the Upright GO 2, allthough I did like the dedicated holder the Upright GO 2 has for keeping the gyroscope in place, compared to the magnets found in the Lumo Lift. A good blend between the Lumo Lift's more minimalistic device and the Upright GO's neck-brace could work quite well. 
+It's reassuring to know that so many varied solutions for a posture analyser exist, and that I don't have to completely start from scratch. These distinct products are all trying to achieve the same goal but through various means. But for the purposes of my solution, I want a device that is as compact as possible while also being as user-friendly to use (and wear) as possible, while being visually aesthetic. For this reason, I would steer clear of the more visually hostile implementation found with the Upright GO 2, allthough I did like the dedicated holder the Upright GO 2 has for keeping the gyroscope in place, compared to the magnets found in the Lumo Lift. A good blend between the Lumo Lift's more minimalistic device and the Upright GO's neck-brace could work quite well. 
 
 While I do like idea of the Zikto Walk, I don't think a wearable wrist device would be viable given the constraints of this project. The main thing that concerns me are that the microcomputer's available to me (ESP32, Micro:Bit, etc) are quite large. When concidering other aspects like the battery, wiring, etc, it is unlikely that a solution could be made that is easy to use and visually aesthetic. Whereas with the conventional approach I had in mind where a sensor is applied to the user's body, it is more feasable to hide certain components under the shirt of the user. There is also the barrier of development. As mentioned previously, a wearable wrist device like the Zikto Walk would be significantly harder to develop for since I would need to determine how the user's arm swings related to the user's posture, which would require significantly more R&D then I have the ability to. 
 
@@ -266,7 +266,7 @@ Below are some proposed prototype sketches, made using the materials decided pre
 ### Prototype Sketch 1
 <img src="./images/Design 1.jpg" alt="Prototype Sketch 1" width="600">
 
-With this first initial design, I wanted to go for something simular to the existing solutions i've seen. Specifically, I really liked how the Lumo Lift had the sensor rest under the shirt near the neck. I have done something simular here, with the MPU-6886 sensor being seperate from the elastic band the user is wearing around his chest. Doing this, will reduce the stress on the shirt had all the components been placed at the same spot as the sensor, as well as making it less top heavy for the user. The sensor will be held up with a clip that clings to the user's collar. Additionally, an elastic band has been placed around the user's chest that contains the micro controller, battery and vibration module. Each component will have a custom 3D printed container, as that will help protect these sensitive components, as well as allow velcro to be easily applied. Velcro is also applied to the elastic band as well, so that these components can be easily detached for whatever reason. The ESP32 is placed at the center (the yellow module) so that it has a clear connection to the other components as well. 
+With this first initial design, I wanted to go for something simular to the existing solutions i've seen. Specifically, I really liked how the Lumo Lift had the sensor rest under the shirt near the neck. I have done something simular here, with the MPU-6886 sensor being separate from the elastic band the user is wearing around his chest. Doing this, will reduce the stress on the shirt had all the components been placed at the same spot as the sensor, as well as making it less top heavy for the user. The sensor will be held up with a clip that clings to the user's collar. Additionally, an elastic band has been placed around the user's chest that contains the micro controller, battery and vibration module. Each component will have a custom 3D printed container, as that will help protect these sensitive components, as well as allow velcro to be easily applied. Velcro is also applied to the elastic band as well, so that these components can be easily detached for whatever reason. The ESP32 is placed at the center (the yellow module) so that it has a clear connection to the other components as well. 
 
 ### Prototype Sketch 2
 <img src="./images/Desgin 2.jpg" alt="Prototype Sketch 2" width="600"><br>
@@ -278,9 +278,9 @@ This design is very simular to the first one, except with this one there are 2 m
 ## 4.1 ESP32 Test Project
 To better understand how to use an ESP32 for this project, I decided to experiment with a personal project. As mentioned previously, I have a smart home integration using home assistant. With that integration, somes lights are from a brand called 'govee', and while they are good value and provide good RGB, they don't communicate over zigbee - instead they use Wi-Fi and/or Bluetooth. To get around this, I used a cloud API that contacts govee's servers directly to send a signal through my govee account to my lights. While this worked, It posed issues, such as - limited to 10 requests per minute, if Wi-Fi ever goes down I am locked out of my lights, and response times were noticably slow when compared to the native zigbee lights already integrated. As this problem has always been on the back of my mind, I figured that solving this would be a really good learning opportunity since it is addressing a problem I had.
 
-Instead, what I ended up doing was using an ESP32 as a bluetooth proxy that can allow home assistant to communicate with the govee lights locally. Inplmenting this was difficult, as this was the first major project ive done with an ESP32. I ran into issues connecting the ESP32 to my computer during this process, which I found was because; A) the USB-C cable I was using was not a data cable - instead it only delivered power, and B) My operating system didnt have the proper drivers installed to communicate with the ESP32.  Additionally, Learning how to flash the ESP32 on linux was especially challenging since this specific solution had a [community ready-made file](https://esphome.io/projects/) available to use that I wasn't familar with. 
+Instead, what I ended up doing was using an ESP32 as a bluetooth proxy that can allow home assistant to communicate with the govee lights locally. Inplmenting this was difficult, as this was the first major project i've done with an ESP32. I ran into issues connecting the ESP32 to my computer during this process, which I found was because; A) the USB-C cable I was using was not a data cable - instead it only delivered power, and B) My operating system didnt have the proper drivers installed to communicate with the ESP32.  Additionally, Learning how to flash the ESP32 on linux was especially challenging since this specific solution had a [community ready-made file](https://esphome.io/projects/) available to use that I wasn't familar with. 
 
-Afterward solving those initial set backs and connecting the ESP32 to home assistant, I can now control my govee lights locally using bluetooth. Im glad I experimented with this initial project, because it was simple enough to let me understand the basics about an ESP32, while forcing me to solve the initial connection issues in an environment where I have more community support. 
+Afterward solving those initial set backs and connecting the ESP32 to home assistant, I can now control my govee lights locally using bluetooth. I'm glad I experimented with this initial project, because it was simple enough to let me understand the basics about an ESP32, while forcing me to solve the initial connection issues in an environment where I have more community support. 
 
 ## 4.2 MPU-6050 Configuration
 The choice to use either the MPU-6886 or the MPU-6050 ultimately comes down to price and ease of access as they both ultimately serve the same purpose. Even though the MPU-6886 was preferred because of the added features, I ultimately purchased the MPU-6050 due to cheaper listing on amazon and faster delivery times. Upon arrival, the MPU-6050 came with two distinct set of pins, which means that I need to solder the set of pins on that would best suit my project. Considering how this project will ultimately take place on a breadboard attached to the users waist, I decided to go with the straight set of set included, compared to the L shaped pair of pins that. <br>
@@ -295,9 +295,9 @@ Allthough it's been a while, I have done soldering in high school for certain ST
 <br>
 <img src="./images/6050 soldered.jpg" alt="MSP-6050 Soldered" width="600">
 
-After the soldering was complete, I needed to test that it was functional and that I correctly soldered it together. To do this, my plan was to use the knowledge developed with the test project I conducted to flash the ESP32 with a locally hosted website that would respond to the MSP-6050 depending on it's orientation. To do this, I first downloaded an online library for the MPU-6050 that works with the Arduino IDE I was using to flash the ESP32. It took a few attempts to get the MSP-6050 to connect - as this was my first time importing a community made library, and as I wasn't fully sure how to connect to the MSP-6050, but eventually I was able to get it to connect after looking on different forums and trying three seperate libraries. I tested the functionality of the MPU-6050 by creating a script that initialised connection to the MPU-6050 and print it's current accelerometer status to serial line '115200'.
+After the soldering was complete, I needed to test that it was functional and that I correctly soldered it together. To do this, my plan was to use the knowledge developed with the test project I conducted to flash the ESP32 with a locally hosted website that would respond to the MSP-6050 depending on it's orientation. To do this, I first downloaded an online library for the MPU-6050 that works with the Arduino IDE I was using to flash the ESP32. It took a few attempts to get the MSP-6050 to connect - as this was my first time importing a community made library, and as I wasn't fully sure how to connect to the MSP-6050, but eventually I was able to get it to connect after looking on different forums and trying three separate libraries. I tested the functionality of the MPU-6050 by creating a script that initialised connection to the MPU-6050 and print it's current accelerometer status to serial line '115200'.
 <br><br>
-The MPU-6050 has two seperate tools for measurement. The accelerometer (measures linear acceleration, i.e., change in velocity) and a Gyroscope (Angular velocity, i.e., how fast and in what direction you're rotating). As it turns out, the goal of tracking the user's posture is relatively simple and didnt require the use of the gyroscrope as the accelerometer by itself was enough. To be more specific, the printed values indicate that the accelerometer's 'Z' axis was able to accurately measure what direction the MPU-6050 was facing when roughly placed against my neck. 
+The MPU-6050 has two separate tools for measurement. The accelerometer (measures linear acceleration, i.e., change in velocity) and a Gyroscope (Angular velocity, i.e., how fast and in what direction you're rotating). As it turns out, the goal of tracking the user's posture is relatively simple and didnt require the use of the gyroscrope as the accelerometer by itself was enough. To be more specific, the printed values indicate that the accelerometer's 'Z' axis was able to accurately measure what direction the MPU-6050 was facing when roughly placed against my neck. 
 <br><br>
 <b>MSP-6050 Printed Values</b>:
 <br>
@@ -331,24 +331,24 @@ The first step for soldering the LiPo battery to the TP4056 charge connecter is 
 
 I knew I had to solder the wire's directly to the TP4056, but I wasn't sure if I needed to take off the connector without cutting the cables - and at one point I tried to pull it off entirely. It took at least 30 minutes for me to realise I was just able to use tweezers to cut the wires.
 
-Afterwards, I took 2 of the pin cables that came with my Micro:Bit bundle as part of last semesters DES221, and trimmed the tops using the same set of tweezers and soldered the exposed ends onto the TP4056. This attempt took at least an hour due to solder metal drtipping off the cables - and having the solder metal leak onto the other pins which could have caused a short circut if not removed.
+Afterwards, I took 2 of the pin cables that came with my Micro:Bit bundle as part of last semesters DES221, and trimmed the tops using the same set of tweezers and soldered the exposed ends onto the TP4056. This attempt took at least an hour due to solder metal drtipping off the cables - and having the solder metal leak onto the other pins which could have caused a short circuit if not removed.
 <br><br>
 <b>Soldered LiPo Battery:</b>
 <br>
 <img src="./images/Soldered LiPo Battery.jpg" alt="Soldered LiPo Battery" width="600">
 
-## 4.4 Short Circut Disaster
+## 4.4 Short Circuit Disaster
 After getting the LiPo battery soldered onto the TP-4056, I went to test it with the live web demo I've discussed previously for the MSP-6050. I connected both the LiPo power out and MPU-6050 power out to the 3.3v pin on the ESP32. You may have noticed the error straight away, but doing this completely fried my MPU-6050. So much so, to the point where the solder points on the MPU-6050 physically burnt my finger.
 
-Despite the model of ESP32 i'm using having a built in voltage regulator (ESP32 Wroom 32D), hooking up the LiPo battery directly to the 3v pin exposed the MPU-6050 directly to the batterys raw voltage. Fortunately, the ESP32 itself was disconnected from the battery before it was fried itself.
+Despite the model of ESP32 i'm using having a built-in voltage regulator (ESP32 Wroom 32D), hooking up the LiPo battery directly to the 3v pin exposed the MPU-6050 directly to the batterys raw voltage. Fortunately, the ESP32 itself was disconnected from the battery before it was fried itself.
 
 Instead, what I should have done was connected the LiPo power cable to the 5v pin on the other side of the ESP32, where it then would have been regulated and delivered to the MPU-6050. Because of this error, I will need to purchase another MPU-6050 as I only purchased the one when I ordered it. Since I need it ASAP because of the approaching deadline - it's going to cost $20 for a replacement one.
 
 The Diagram below show's the error I made and the pins I should have connected to instead.
 <br><br>
-<b>Diagram Depicting Short Circut:</b>
+<b>Diagram Depicting Short Circuit:</b>
 <br>
-<img src="./images/Short Circut Illustration.jpg" alt="Short Circut Illustration" width="600">
+<img src="./images/Short Circuit Illustration.jpg" alt="Short Circuit Illustration" width="600">
 
 ## 4.5 Aftermath and Vibration Module
 Since the MSP-6050 has been fried, I am at this stage 'technically' unable to create a prototype. However, thankfully I did work on the inplementation and code for the MSP-6050 using DC from my computer and therefore can still modify that code to work with these extra additions.
@@ -357,7 +357,7 @@ While I wait for a replacement 6050 to arrive, I'll spend this time getting the 
 
 The final component of this project to be discussed is the vibration module. As and discussed previously, a series of cylindrical vibration modules will be used and strapped to the user's back to alert them of their posture levels. The exact number will varry depending on the intensity of the individual modules.
 
-I purchased a pack of 4 vibration modules that need to be individually soldered onto different cables. I did the soldering with the exact same setup used to solder the LiPo battery, and aside from challanges getting the solder to stick the two seperate wires, it went a lot faster then the soldering for the LiPo battery.
+I purchased a pack of 4 vibration modules that need to be individually soldered onto different cables. I did the soldering with the exact same setup used to solder the LiPo battery, and aside from challanges getting the solder to stick the two separate wires, it went a lot faster then the soldering for the LiPo battery.
 <br><br>
 <b>Soldered Vibration Module:</b>
 <br>
@@ -402,7 +402,7 @@ As it turns out, C does not have a 'List' parameter like higher-level languages 
 <br>
 <img src="./images/Linked Lists Diagram.jpg" alt="Linked Lists" width="600">
 
-From here, it was as simple as looping through all the nodes starting at the head whenever a certain amount of time has passed. Now in order to actually determine how much time has passed in code - I began a search down a massive rabbit hole looking into different libraries to import for time management in C and to make sure that it's consistent with real work time. Fortunantly, I discovered fairly quickly that there was a built in 'Millis' function that gave the current time in millimeters since january 1st 1970 which I could subtract from a previously stored value of millis to determine the time passed in milliseconds. From here, it was as simple checking if that subtracted value exceeded a set interval and begin the check from there.
+From here, it was as simple as looping through all the nodes starting at the head whenever a certain amount of time has passed. Now in order to actually determine how much time has passed in code - I began a search down a massive rabbit hole looking into different libraries to import for time management in C and to make sure that it's consistent with real work time. Fortunantly, I discovered fairly quickly that there was a built-in 'Millis' function that gave the current time in millimeters since january 1st 1970 which I could subtract from a previously stored value of millis to determine the time passed in milliseconds. From here, it was as simple checking if that subtracted value exceeded a set interval and begin the check from there.
 
 Aside from slight syntax errors, it suprisingly worked on my first attempt flashing it to the ESP32. I originally set it to be every seconds (1000 milliseconds) but I found that to be too slow to refresh, so I settled on half a seonc (500 milliseconds). Because of the code finging the average of the MSP-6050 values in a set interval of time, it was able to effectively ignore outliers - which felt really good to get working.
 
@@ -418,7 +418,7 @@ With the code operational, all that's left is to actually begin construction on 
 <br>
 <img src="./images/Elastic Resistance Band.jpg" alt="Elastic Resistance Band" width="600">
 <br><br>
-<b>Vecro:</b>
+<b>Velcro:</b>
 <br>
 <img src="./images/Velcro Box.jpg" alt="Velcro" width="600">
 <br><br>
@@ -460,7 +460,7 @@ With this, the physical construction was effectively complete. All I have left t
 
 ## 5.5 Testing
 
-When I began testing for this prototype, I realised straight away just how difficult it is to put this on by myself. There are two elements that I didn't take into account when designing this prototype, and that was toggling the prototype on and off, and comfortably anchoring the MSP-6050 to my neck using magnets. To assist me in testing, I used my sister to both manage the power while im wearing it, and more importantly assist me in anchoring the magnets to my body. For the first few tests, I opted to have power through USB while sitting down, so I can better configure the MSP-6050 values. 
+When I began testing for this prototype, I realised straight away just how difficult it is to put this on by myself. There are two elements that I didn't take into account when designing this prototype, and that was toggling the prototype on and off, and comfortably anchoring the MSP-6050 to my neck using magnets. To assist me in testing, I used my sister to both manage the power while i'm wearing it, and more importantly assist me in anchoring the magnets to my body. For the first few tests, I opted to have power through USB while sitting down, so I can better configure the MSP-6050 values. 
 
 It was during this testing, that I realised that the duel magnet mount solution I came up with was really impracticle. When I came up with the design I failed to account for the fact that my shirt will sage, and contort. This means that with the duel anchor setup, the MSP-6050 is rarely, if ever pinned against my back. This means that the readings gathered are unreliable. In addition, the sketch I provided had the magnets resting on the shirts collar above the MSP-6050. Placing the magnets in that spot causes the shirt to sage and contort even further. The work-around I found for the magnet sagging on the shirt collar specifically was to place the magnets closer to my shoulder blades - to ensure that the weight distribution was more spread out. Even then, it still didn't pin the MSP-6050 to my neck.
 <br><br>
