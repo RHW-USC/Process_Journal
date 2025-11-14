@@ -4,6 +4,7 @@
 <b>Group:</b> Individual <br>
 <b>Member:</b> Ryan Wells
 
+<b>Video Proposal:</b> https://youtu.be/9RdAgVsLDrc
 
 # 1 Introduction
 
@@ -495,6 +496,8 @@ With the prototype functioning with me, I needed to make sure that other people 
 It worked really well. The value of 10100 was indeed a good sweet spot that worked for a broader audience. 
 
 Finally, with the prototype fully functional, I got my test subjects to walk around my home with the LiPo battery powering the prototype (ensuring I connected the LiPo battery to the 5v pin this time) and it worked without any major issues. I used this opportunity during testing to film some segments for the video proposal as well. 
+
+The proposal briefly summarises the use case of the posture tracker, who it's used for, and why it exists. 
 
 ## 6 Conclusion and Final Thoughts
 This project has easily been the most fun I have ever had working on any academic assignment. This assignment for me was the perfect blend of engagement, challenge and practical application. Especially compared to DES221, where I wasn't able to participate as much to the group project due to communciation issues. This project has allowed me to effectively 'redeem' myself. On that same note, I'm glad that I did this project alone and not in a group. Purely because I have been able to maintain creative freedom and solve these challenges on my own.
