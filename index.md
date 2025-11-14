@@ -1,5 +1,5 @@
 # Process Journal
-<b>Class:</b> DES220 <br>
+<b>Class:</b> DES222 <br>
 <b>Assignment:</b> Tasks 2 and 3 <br>
 <b>Group:</b> Individual <br>
 <b>Member:</b> Ryan Wells
@@ -7,7 +7,7 @@
 
 # 1 Introduction
 
-This process journal will be documenting the design and creation of a project for tasks 2 and 3 in DES220. The project itself will be a responsive, and physical creation that will use a microcontroller (such as a Raspberry Pi, ESP32, or a Micro:Bit). This assignment has the option to be developed in a group of up to 3 people, however I have decided to develop this solution myself, so that I can challenge myself while also having complete creative control.
+This process journal will be documenting the design and creation of a project for tasks 2 and 3 in DES222. The project itself will be a responsive, and physical creation that will use a microcontroller (such as a Raspberry Pi, ESP32, or a Micro:Bit). This assignment has the option to be developed in a group of up to 3 people, however I have decided to develop this solution myself, so that I can challenge myself while also having complete creative control.
 
 A fundamental attribute my solution must meet is that it must be Responsive. Responsive in this context refers to the dynamic reaction of a system that responds to external stimuli. An example of this is an individual wearing a smartwatch with a built-in heart monitor. The Input is the user's heart rate, and the response is a graphical display of the user's real-time heart rate. The solution for this assignment doesn’t need to be a wearable device; it can be anything from custom hardware to environmental sensors fed into a web application. 
 
